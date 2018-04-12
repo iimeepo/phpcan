@@ -1,0 +1,24 @@
+{
+    "require": {
+        "ares333/php-curl": "4.2.1",
+        "hprose/hprose": ">=2.0.0",
+        "mongodb/mongodb": ">=1.3.0",
+        "nmred/kafka-php": "0.2.*",
+        "phpcan/client": "1.0.1"
+    },
+    "config" : {
+        "vendor-dir" : "phpcan/vendor"
+    },
+    "authors": [
+        {
+            "name": "suruibuas",
+            "email": "317953536@qq.com"
+        }
+    ],
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://packagist.phpcomposer.com"
+        }
+    }
+}
