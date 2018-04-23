@@ -252,7 +252,7 @@ class Zookeeper{
         try
         {
             $this->_conn->connect($this->_conf['HOST'].':'.$this->_conf['PORT'], null, $this->_conf['TIMEOUT'] * 1000);
-            \Zookeeper::setDebugLevel(\Zookeeper::LOG_LEVEL_ERROR);
+            \Zookeeper::setDebugLevel(\Zookeeper::LOG_LEVEL_DEBUG);
         }
         catch (\ZookeeperException $exception)
         {

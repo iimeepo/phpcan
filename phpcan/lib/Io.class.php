@@ -38,7 +38,7 @@ class Io{
             $post = $_POST[$key];
         }
         // 如果是整型或者是空则直接返回
-        if (is_int($post) || empty($post))
+        if (isInt($post) || empty($post))
         {
             return $post;
         }
@@ -77,7 +77,7 @@ class Io{
             $get = $_GET[$key];
         }
         // 如果是整型或者空则直接返回
-        if (is_int($get) || empty($get))
+        if (isInt($get) || empty($get))
         {
             return $get;
         }
@@ -131,7 +131,7 @@ class Io{
     public function out($content = [], $code = 200, $type = '')
     {
         $type = ($type == '') ? conf('RESPONSE') : $type;
-        $contentType = '';
+        $contentType  = '';
         $data['code'] = ( ! isset($content['code'])) ? 100 : $content['code'];
         $data['msg']  = ( ! isset($content['msg'])) ? '执行成功' : $content['msg'];
         $data['data'] = ( ! isset($content['data'])) ? [] : $content['data'];

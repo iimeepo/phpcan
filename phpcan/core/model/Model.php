@@ -281,4 +281,56 @@ class Model extends Mysql
                     ->edit($data);
     }
 
+    /**
+     * 描述：递增
+     * @param $cond
+     * @param array $data
+     */
+    public function inc($cond = null, array $data = [])
+    {
+        $tmp = [];
+        foreach ($data as $k => $v)
+        {
+            $tmp[$k] = '`'.$k.'` + '.$v;
+        }
+        if ($this->timestamps)
+        {
+            $tmp[$this->updateAt] = time();
+        }
+        return $this->from($this->table)
+                    ->where($cond)
+                    ->edit($tmp);
+    }
+
+    /**
+     * 描述：递减
+     * @param $cond
+     * @param array $data
+     */
+    public function dec($cond = null, array $data = [])
+    {
+        $tmp = [];
+        foreach ($data as $k => $v)
+        {
+            $tmp[$k] = '`'.$k.'` - '.$v;
+        }
+        if ($this->timestamps)
+        {
+            $tmp[$this->updateAt] = time();
+        }
+        return $this->from($this->table)
+            ->where($cond)
+            ->edit($tmp);
+    }
+
+    /**
+     * 描述：更新或写入数据
+     */
+    public function insertOrUpdate($cond = null, array $insert = [], array $update = [])
+    {
+        return $this->from($this->table)
+                    ->where($cond)
+                    ->replace($insert, $update);
+    }
+
 }

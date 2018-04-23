@@ -15,10 +15,10 @@
 
 return [
     // 默认项目
-    'DEFAULT'      => 'dmc',
+    'DEFAULT'      => 'demo',
     // 允许访问的项目，如果访问的项目不在以下设置内则使用默认项目，防止被重试
     'ALLOW'        => [
-        'dmc',
+        'demo',
     ],
     // 输入过滤
     'INPUTFILTER'    => 'escape|xss',

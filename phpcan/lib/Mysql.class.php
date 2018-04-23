@@ -120,20 +120,35 @@ class Mysql{
         }
         $this->_where .= ' WHERE ';
         $this->_bindData = [];
-        $and = '';
+        $i = 0;
         foreach ($where as $key => $val)
         {
+            if ($i == 0)
+            {
+                $and = '';
+            }
+            else
+            {
+                $and = (preg_match('/or/i', $key)) ? '' : ' AND ';
+            }
             $this->_where .= $and.$key;
             if (isInt($val) || is_string($val))
             {
-                $this->_where .= (preg_match('/\s/', $key)) ? ' ? ' : ' = ? ';
+                if ((preg_match('/\s/', $key)))
+                {
+                    $this->_where .= (preg_match('/^or\s+([\w]+)$/i', $key)) ? ' = ? ' : ' ? ';
+                }
+                else
+                {
+                    $this->_where .= ' = ? ';
+                }
                 $this->_bindData[] = $val;
             }
             else
             {
                 $this->_where .= is_array($val) ? ' ('.implode(',', $val).') ' : ' IS NULL ';
             }
-            $and = ' AND ';
+            $i++;
         }
         return $this;
     }
@@ -372,8 +387,8 @@ class Mysql{
         }
         else
         {
-            $data = (empty($update)) ? $insert : $update;
-            $this->edit($data);
+            if ( ! empty($update))
+            $this->edit($update);
         }
         return $this->_result->rowcount();
     }

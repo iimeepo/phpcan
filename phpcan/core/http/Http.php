@@ -70,7 +70,8 @@ final class Http{
                 CURLOPT_URL => $url,
                 CURLOPT_TIMEOUT => $timeOut,
                 CURLOPT_HTTPHEADER => $header,
-                CURLOPT_CUSTOMREQUEST => 'GET'
+                CURLOPT_CUSTOMREQUEST => 'GET',
+                CURLOPT_FOLLOWLOCATION => FALSE,
             ]
         ],
         function($result) use (&$response, $debug, $header){
@@ -125,6 +126,7 @@ final class Http{
                 CURLOPT_TIMEOUT => $timeOut,
                 CURLOPT_HTTPHEADER => $header,
                 CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_FOLLOWLOCATION => FALSE,
                 CURLOPT_POST => TRUE,
                 CURLOPT_POSTFIELDS => http_build_query($data)
             ]
@@ -194,6 +196,7 @@ final class Http{
                 CURLOPT_HTTPHEADER => $header,
                 CURLOPT_CUSTOMREQUEST => 'POST',
                 CURLOPT_INFILE => $stream,
+                CURLOPT_FOLLOWLOCATION => FALSE,
                 CURLOPT_INFILESIZE => $length,
                 CURLOPT_UPLOAD => 1
             ]
@@ -255,6 +258,7 @@ final class Http{
             $opt['opt'] = [
                 CURLOPT_URL => $this->_baseUrl($row['url'], $row['query']),
                 CURLOPT_TIMEOUT => $row['timeout'],
+                CURLOPT_FOLLOWLOCATION => FALSE,
                 CURLOPT_HTTPHEADER => $this->_setHeader($row['header']),
                 CURLOPT_CUSTOMREQUEST => $method
             ];

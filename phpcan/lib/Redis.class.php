@@ -38,13 +38,21 @@ class Redis{
 
     /**
      * 描述：设置KEY
-     * @param string $key
+     * @param $key
      * @param string $action
      * @return object
      */
-    public function key(string $key = '', string $action = '')
+    public function key($key = '', string $action = '')
     {
-        $this->_key = $this->_conf['PREFIX'].$key;
+        if (is_array($key))
+        {
+            foreach ($key as $v)
+                $this->_key[] = $this->_conf['PREFIX'].$v;
+        }
+        else
+        {
+            $this->_key = $this->_conf['PREFIX'].$key;
+        }
         $this->_action = $action;
         return $this;
     }
@@ -58,16 +66,9 @@ class Redis{
     {
         $stime = microtime(TRUE);
         if ($this->_action == '') $this->_action = 'get';
-        if ($this->_action == 'mget')
-        {
-            $handle = [];
-        }
-        else
-        {
-            $handle = [$this->_key];
-        }
+        $handle = [$this->_key];
         $handle = array_merge($handle, $params);
-        $data = call_user_func_array([
+        $data   = call_user_func_array([
             $this->_conn,
             $this->_action
         ], $handle);
@@ -92,12 +93,14 @@ class Redis{
         if ($this->_action == '') $this->_action = 'set';
         // 根据类型获取写入值
         if (in_array($this->_action, [
-            'zadd', 'hincrby'
+            'zadd', 'hincrby', 'lset', 'zadd', 'hset'
         ]))
         {
             $data = $params[1];
         }
-        elseif ($this->_action == 'incr')
+        elseif (in_array($this->_action, [
+            'decr', 'incr'
+        ]))
         {
             $data = 1;
         }
@@ -105,14 +108,7 @@ class Redis{
         {
             $data = $params[0];
         }
-        if ($this->_action == 'mset')
-        {
-            $handle = [];
-        }
-        else
-        {
-            $handle = [$this->_key];
-        }
+        $handle = [$this->_key];
         $handle = array_merge($handle, $params);
         call_user_func_array([
             $this->_conn,

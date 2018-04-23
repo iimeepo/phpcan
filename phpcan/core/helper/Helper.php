@@ -315,3 +315,33 @@ function httpHeader($key = '', $default = FALSE)
 {
     return \api\Io::header($key, $default);
 }
+
+/**
+ * 描述：返回MYSQL实例
+ * @param string $table
+ * @return mixed
+ */
+function mysql($table = '')
+{
+    return \api\Mysql::from($table);
+}
+
+/**
+ * 描述：返回MONGODB实例
+ * @param string $table
+ * @return mixed
+ */
+function mongodb($table = '')
+{
+    return \api\Mongodb::from($table);
+}
+
+/**
+ * 描述：返回REDIS实例
+ * @param string $key
+ * @param string $action
+ */
+function redis($key = '', $action = '')
+{
+    return \api\Redis::key($key, $action);
+}

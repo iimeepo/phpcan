@@ -2,7 +2,7 @@
 
 /**
  * ===============================================
- * PHPCAN微服务框架 - docker版本
+ * PHPCAN微服务框架 - fpm版本
  * ===============================================
  * 版本：PHP7.0 +
  * 作者: suruibuas / 317953536@qq.com
@@ -20,10 +20,10 @@ define('_VERSION', '1.0.1');
 define('_PHPCAN', ROOTPATH.'/phpcan');
 
 // 调试模式
-define('_DEBUG', TRUE);
+define('_DEBUG', FALSE);
 
 // 开启SOA支持
-define('_SOA', TRUE);
+define('_SOA', FALSE);
 
 // 网关地址，“/” 结尾
 define('_GATEWAY', '');

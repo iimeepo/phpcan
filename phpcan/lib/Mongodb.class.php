@@ -79,7 +79,32 @@ class Mongodb{
      */
     public function where(array $cond = [])
     {
-        $this->_where = $cond;
+        $tmp = [];
+        $map = [
+            '>'     => '$gt',
+            '<'     => '$lt',
+            '>='    => '$gte',
+            '<='    => '$lte',
+            '<>'    => '$ne',
+            'IN'    => '$in',
+            'NOTIN' => '$nin'
+        ];
+        foreach ($cond as $k => $v)
+        {
+            $k = trim($k);
+            if ($k == '_id')
+            {
+                $tmp[$k] = new \MongoDB\BSON\ObjectId($v);
+            }
+            else
+            {
+                if (preg_match('/(.*)\s+(.*)/i', $k, $data))
+                    $tmp[$data[1]] = ($data[2] == 'LIKE') ? new \MongoDB\BSON\Regex($v, 'i') : [$map[trim($data[2])] => $v];
+                else
+                    $tmp[$k] = $v;
+            }
+        }
+        $this->_where = $tmp;
         return $this;
     }
 
@@ -90,7 +115,16 @@ class Mongodb{
      */
     public function order(array $order = [])
     {
-        $this->_order = $order;
+        $tmp = [];
+        $map = [
+            'DESC' => -1,
+            'ASC'  => 1
+        ];
+        foreach ($order as $k => $v)
+        {
+            $tmp[$k] = $map[strtoupper($v)];
+        }
+        $this->_order = $tmp;
         return $this;
     }
 
@@ -261,18 +295,6 @@ class Mongodb{
     }
 
     /**
-     * 描述：查询总数
-     * @return int
-     */
-    public function count()
-    {
-        $result = $this->_collection()->count($this->_where);
-        $this->_from  = '';
-        $this->_where = [];
-        return $result;
-    }
-
-    /**
      * 描述：删除数据
      * @return int
      */
@@ -290,6 +312,58 @@ class Mongodb{
         $this->_from  = '';
         $this->_where = [];
         return $result->getDeletedCount();
+    }
+
+    /**
+     * 描述：查询总数
+     * @return int
+     */
+    public function count()
+    {
+        $result = $this->_collection()->count($this->_where);
+        $this->_from  = '';
+        $this->_where = [];
+        return $result;
+    }
+
+    /**
+     * 描述：创建索引
+     * @param string $key
+     */
+    public function createIndex(string $key = '')
+    {
+        return $this->_collection()->createIndex([
+            $key => 1
+        ]);
+    }
+
+    /**
+     * 描述：返回索引
+     */
+    public function getIndex()
+    {
+        $indexs = $this->_collection()->listIndexes();
+        $tmp = [];
+        foreach ($indexs as $row)
+        {
+            $tmp[] = $row;
+        }
+        return $tmp;
+    }
+
+    /**
+     * 描述：删除索引
+     * @param string $key
+     */
+    public function dropIndex(string $key = '')
+    {
+        try{
+            return $this->_collection()->dropIndex($key);
+        }
+        catch(\Exception $e)
+        {
+            return $e->getMessage();
+        }
     }
 
     /**

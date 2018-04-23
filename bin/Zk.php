@@ -43,6 +43,7 @@ $Zookeeper = new \phpcan\lib\Zookeeper([
     // 超时时间
     'TIMEOUT' => $conf['TIMEOUT']
 ]);
+
 // 获取环境变量中的IP和端口
 $env = getenv();
 // 创建节点
