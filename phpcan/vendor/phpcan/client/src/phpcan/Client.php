@@ -2,7 +2,7 @@
 
 /**
  * ===============================================
- * PHPCAN微服务框架 - docker版本
+ * PHPCAN微服务框架 - fpm版本
  * ===============================================
  * 版本：PHP7.0 +
  * 作者: suruibuas / 317953536@qq.com
@@ -103,7 +103,7 @@ class Client{
      * @param string $url
      * @param array $params
      */
-    public function get($url = '', $params = [])
+    public function get($url = '', $params = [], $cache = FALSE)
     {
         if ($url == '')
         {
@@ -119,22 +119,27 @@ class Client{
         $this->_createHeader();
         // 初始化结果
         $response = [];
+        // 允许网关缓存
+        $cache = (is_bool($params)) ? $params : $cache;
+        if ($cache)
+            $this->_header[] = 'SOACACHE:1';
         // 发送请求
         $this->_client->add([
             'opt' => [
                 CURLOPT_URL => $url,
                 CURLOPT_TIMEOUT => $this->_timeOut,
                 CURLOPT_HTTPHEADER => $this->_header,
+                CURLOPT_FOLLOWLOCATION => FALSE,
                 CURLOPT_CUSTOMREQUEST => 'GET'
             ]
         ],
-            function($result) use (&$response){
-                $response = $this->_response($result['body']);
-            },
-            function($result) use (&$response){
-                // 错误
-                $response = $this->_error($result);
-            })->start();
+        function($result) use (&$response){
+            $response = $this->_response($result['body']);
+        },
+        function($result) use (&$response){
+            // 错误
+            $response = $this->_error($result);
+        })->start();
         $this->_header = [];
         // 返回数据
         return $response;
@@ -170,17 +175,18 @@ class Client{
                 CURLOPT_TIMEOUT => $this->_timeOut,
                 CURLOPT_HTTPHEADER => $this->_header,
                 CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_FOLLOWLOCATION => FALSE,
                 CURLOPT_POST => TRUE,
                 CURLOPT_POSTFIELDS => http_build_query($data)
             ]
         ],
-            function($result) use (&$response){
-                $response = $this->_response($result['body']);
-            },
-            function($result) use (&$response){
-                // 错误
-                $response = $this->_error($result);
-            })->start();
+        function($result) use (&$response){
+            $response = $this->_response($result['body']);
+        },
+        function($result) use (&$response){
+            // 错误
+            $response = $this->_error($result);
+        })->start();
         $this->_header = [];
         // 返回数据
         return $response;
@@ -235,7 +241,9 @@ class Client{
         {
             $method = (isset($row['post']) && ! empty($row['post'])) ? 'POST' : 'GET';
             $opt = [];
+            $this->_url = $row['url'];
             $opt['opt'] = [
+                CURLOPT_FOLLOWLOCATION => FALSE,
                 CURLOPT_URL => $this->_baseUrl($row['url'], $row['query']),
                 CURLOPT_TIMEOUT => $row['timeout'],
                 CURLOPT_HTTPHEADER => $this->_createHeader($row['header']),
@@ -271,6 +279,7 @@ class Client{
 
     /**
      * 描述：添加HEADER请求头信息
+     * @param $header
      */
     public function header($header = [])
     {
@@ -393,7 +402,7 @@ class Client{
         $serviceUrl  = rtrim($this->_conf['GATEWAY'],'/');
         $serviceUrl .= (preg_match('#^/.*#', $url)) ? $url : '/'.$url;
         // 解析参数
-        if (empty($query))
+        if ( ! is_array($query) || empty($query))
         {
             return $serviceUrl;
         }
