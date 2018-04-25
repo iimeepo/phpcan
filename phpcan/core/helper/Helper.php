@@ -44,6 +44,13 @@ function error($code, $msg = '', array $param = [])
         'code' => $code,
         'msg'  => $errMsg
     ];
+    if (_SOA)
+    {
+        \api\Log::add('FRAMEWORK', [
+            'TOTALTIME' => round(microtime(TRUE) - $GLOBALS['_RUNTIME']['MICROTIME'], 4)
+        ]);
+        $err['log'] = \api\Log::info();
+    }
     exit(json_encode($err, JSON_UNESCAPED_UNICODE));
 }
 
@@ -70,21 +77,6 @@ function json($code = 100, $msg = '执行成功', $data = [], $httpcode = 200)
         $cont['data'] = $data;
     }
     \api\Io::out($cont, $httpcode, 'json');
-}
-
-/**
- * 描述：载入核心文件
- * @param $file
- * @return bool
- */
-function import($files = [])
-{
-    if (empty($files))
-    {
-        return FALSE;
-    }
-    foreach ($files as $file)
-        require ROOTPATH.'/phpcan/'.$file;
 }
 
 /**
@@ -344,4 +336,50 @@ function mongodb($table = '')
 function redis($key = '', $action = '')
 {
     return \api\Redis::key($key, $action);
+}
+
+/**
+ * 描述：格式化时间为多久之前的模式
+ * @param $time
+ * @return string
+ */
+function formatChineseTime($time)
+{
+    //开始时间
+    $start_time = strtotime($time);
+    //现在时间
+    $now_time   = time();
+    //计算时间差
+    $diff = $now_time - $start_time;
+    //格式化
+    $time = '';
+    if ($diff < 60)
+    {
+        $time = $diff.'秒前';
+    }
+    else if ($diff >= 60 && $diff <= 3600)
+    {
+        $time = floor($diff / 60).'分钟前';
+    }
+    else if ($diff >= 3600 && $diff <= 86400)
+    {
+        $time = floor($diff / 3600).'小时前';
+    }
+    else if ($diff >= 86400 && $diff <= 604800)
+    {
+        $time = floor($diff / 86400).'天前';
+    }
+    else if ($diff >= 604800 && $diff <= 2419200)
+    {
+        $time = floor($diff / 604800).'周前';
+    }
+    else if ($diff >= 2419200 && $diff <= 29030400)
+    {
+        $time = floor($diff / 2419200).'月前';
+    }
+    else
+    {
+        $time = floor($diff / 29030400).'年前';
+    }
+    return $time;
 }
