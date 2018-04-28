@@ -37,7 +37,36 @@ require _WORKPATH . '/Global.php';
 date_default_timezone_set('PRC');
 // 开启报错信息
 error_reporting(_DEBUG ? E_ALL : 0);
-
+// 捕获系统异常
+register_shutdown_function('shutdown');
+// 异常回调
+function shutdown()
+{
+    $error = error_get_last();
+    // 捕获致命异常
+    if ( ! empty($error) && $error['type'] <= 4)
+    {
+        $data = [
+            'code' => 500,
+            'msg'  => '系统发生致命错误',
+            'data' => []
+        ];
+        if (_SOA)
+        {
+            \api\Log::add('FRAMEWORK', [
+                'TOTALTIME' => round(microtime(TRUE) - $GLOBALS['_RUNTIME']['MICROTIME'], 4)
+            ]);
+            \api\Log::add('ERROR', [
+                'TYPE' => $error['type'],
+                'MSG'  => $error['message'],
+                'FILE' => $error['file'],
+                'LINE' => $error['line']
+            ]);
+            $data['log'] = \api\Log::info();
+        }
+        exit(json_encode($data, JSON_UNESCAPED_UNICODE));
+    }
+}
 // 载入IOC容器
 require _PHPCAN . '/core/ioc/Di.php';
 // 运行容器
