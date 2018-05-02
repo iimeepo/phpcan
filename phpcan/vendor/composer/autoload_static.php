@@ -4,15 +4,20 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit0ea487b2335116b30d1baa3ed771d6f9
+class ComposerStaticInitf4627e05fee68be7596a4e002cfa48c7
 {
     public static $files = array (
+        'ad155f8f1cf0d418fe49e248db8c661b' => __DIR__ . '/..' . '/react/promise/src/functions_include.php',
         'e8aa6e4b5a1db2f56ae794f1505391a8' => __DIR__ . '/..' . '/amphp/amp/lib/functions.php',
         'd7f4f7522f962c095f835c50e6136087' => __DIR__ . '/..' . '/hprose/hprose/src/init.php',
         '3a37ebac017bc098e9a86b35401e7a68' => __DIR__ . '/..' . '/mongodb/mongodb/src/functions.php',
     );
 
     public static $prefixLengthsPsr4 = array (
+        'R' => 
+        array (
+            'React\\Promise\\' => 14,
+        ),
         'P' => 
         array (
             'Psr\\Log\\' => 8,
@@ -25,6 +30,15 @@ class ComposerStaticInit0ea487b2335116b30d1baa3ed771d6f9
         array (
             'Hprose\\' => 7,
         ),
+        'G' => 
+        array (
+            'GuzzleHttp\\Stream\\' => 18,
+            'GuzzleHttp\\Ring\\' => 16,
+        ),
+        'E' => 
+        array (
+            'Elasticsearch\\' => 14,
+        ),
         'A' => 
         array (
             'Ares333\\Curl\\' => 13,
@@ -33,6 +47,10 @@ class ComposerStaticInit0ea487b2335116b30d1baa3ed771d6f9
     );
 
     public static $prefixDirsPsr4 = array (
+        'React\\Promise\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/react/promise/src',
+        ),
         'Psr\\Log\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
@@ -44,6 +62,18 @@ class ComposerStaticInit0ea487b2335116b30d1baa3ed771d6f9
         'Hprose\\' => 
         array (
             0 => __DIR__ . '/..' . '/hprose/hprose/src/Hprose',
+        ),
+        'GuzzleHttp\\Stream\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/guzzlehttp/streams/src',
+        ),
+        'GuzzleHttp\\Ring\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/guzzlehttp/ringphp/src',
+        ),
+        'Elasticsearch\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/elasticsearch/elasticsearch/src/Elasticsearch',
         ),
         'Ares333\\Curl\\' => 
         array (
@@ -75,9 +105,9 @@ class ComposerStaticInit0ea487b2335116b30d1baa3ed771d6f9
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit0ea487b2335116b30d1baa3ed771d6f9::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit0ea487b2335116b30d1baa3ed771d6f9::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit0ea487b2335116b30d1baa3ed771d6f9::$prefixesPsr0;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitf4627e05fee68be7596a4e002cfa48c7::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitf4627e05fee68be7596a4e002cfa48c7::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitf4627e05fee68be7596a4e002cfa48c7::$prefixesPsr0;
 
         }, null, ClassLoader::class);
     }

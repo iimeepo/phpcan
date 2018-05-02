@@ -14,7 +14,7 @@
  *                                                        *
  * hprose service class for php 5.3+                      *
  *                                                        *
- * LastModified: Jul 14, 2017                             *
+ * LastModified: Apr 21, 2018                             *
  * Author: Ma Bingyao <andot@hprose.com>                  *
  *                                                        *
 \**********************************************************/
@@ -67,12 +67,42 @@ abstract class Service extends HandlerManager {
     public $onUnsubscribe = null;
     private $topics = array();
     private $nextid = 0;
+
+    /**
+     * Last ErrorException
+     *
+     * @var null|ErrorException
+     */
+    public static $lastError = null;
+
+    /**
+     * trace error
+     *
+     * @var bool
+     */
+    protected static $trackError = false;
+
+    /**
+     * @var null|callable
+     */
+    protected static $_lastErrorHandler = null;
+
     public function __construct() {
         parent::__construct();
         $this->errorTypes = error_reporting();
         register_shutdown_function(array($this, 'fatalErrorHandler'));
         $this->addMethod('getNextId', $this, '#', array('simple' => true));
+        self::$_lastErrorHandler = set_error_handler(array($this, 'errorHandler'), $this->errorTypes);
     }
+
+    public function errorHandler($errno, $errstr, $errfile, $errline) {
+        if (self::$trackError) {
+            self::$lastError = new ErrorException($errstr, 0, $errno, $errfile, $errline);
+        } else if (self::$_lastErrorHandler){
+            call_user_func(self::$_lastErrorHandler, $errno, $errstr, $errfile, $errline);
+        }
+    }
+
     public function getNextId() {
         if (function_exists('com_create_guid')) {
             return trim(com_create_guid(), '{}');
@@ -196,7 +226,7 @@ abstract class Service extends HandlerManager {
         }
         return call_user_func_array($context->method, $args);
     }
-    private function inputFilter($data, stdClass $context) {
+    protected function inputFilter($data, stdClass $context) {
         for ($i = count($this->filters) - 1; $i >= 0; $i--) {
             $data = $this->filters[$i]->inputFilter($data, $context);
         }
@@ -235,6 +265,9 @@ abstract class Service extends HandlerManager {
         catch (Exception $e) {
             $error = $e;
         }
+        catch (Throwable $e) {
+            $error = $e;
+        }
         $stream = new BytesIO();
         $writer = new Writer($stream, true);
         $stream->write(Tags::TagError);
@@ -252,7 +285,7 @@ abstract class Service extends HandlerManager {
         $stream->close();
         return $data;
     }
-    private function beforeInvoke($name, array &$args, stdClass $context) {
+    protected function beforeInvoke($name, array &$args, stdClass $context) {
         try {
             $self = $this;
             if ($this->onBeforeInvoke !== null) {
@@ -279,6 +312,9 @@ abstract class Service extends HandlerManager {
         catch (Exception $error) {
             return $this->sendError($error, $context);
         }
+        catch (Throwable $error) {
+            return $this->sendError($error, $context);
+        }
     }
     /*
         This method is a protected method.
@@ -291,7 +327,7 @@ abstract class Service extends HandlerManager {
         }
         $passContext = $context->passContext;
         if ($passContext === null) {
-            $passContext = $this->passContext;
+            $context->passContext = $passContext = $this->passContext;
         }
         if ($context->async) {
             $self = $this;
@@ -310,7 +346,7 @@ abstract class Service extends HandlerManager {
         }
         else {
             if ($passContext) $args[] = $context;
-            return Future\toFuture($this->callService($args, $context));
+            return $this->callService($args, $context);
         }
     }
     /*
@@ -334,11 +370,11 @@ abstract class Service extends HandlerManager {
         But PHP 5.3 can't call private method in closure,
         so we comment the private keyword.
     */
-    /*private*/ function afterInvoke($name, array $args, stdClass $context, $result) {
-        if ($context->async && is_callable($args[count($args) - 1])) {
+    /*private*/ function afterInvoke($name, array &$args, stdClass $context, $result) {
+        if ($context->async && (count($args) > 0) && is_callable($args[count($args) - 1])) {
             unset($args[count($args) - 1]);
         }
-        if ($context->passContext && ($args[count($args) - 1] === $context)) {
+        if ($context->passContext && (count($args) > 0) && ($args[count($args) - 1] === $context)) {
             unset($args[count($args) - 1]);
         }
         if ($this->onAfterInvoke !== null) {
@@ -392,7 +428,7 @@ abstract class Service extends HandlerManager {
         $stream->close();
         return $data;
     }
-    private function doInvoke(BytesIO $stream, stdClass $context) {
+    protected function doInvoke(BytesIO $stream, stdClass $context) {
         $results = array();
         $reader = new Reader($stream);
         do {
@@ -465,9 +501,9 @@ abstract class Service extends HandlerManager {
         $stream->close();
         return $data;
     }
-    protected function delay($interval, $data) {
-        $seconds = floor($interval);
-        $nanoseconds = ($interval - $seconds) * 1000000000;
+    protected function delay($milliseconds, $data) {
+        $seconds = floor($milliseconds / 1000);
+        $nanoseconds = ($milliseconds % 1000) * 1000000;
         time_nanosleep($seconds, $nanoseconds);
         return Future\value($data);
     }
@@ -500,6 +536,9 @@ abstract class Service extends HandlerManager {
         catch (Exception $error) {
             $response = $this->delayError($error, $context);
         }
+        catch (Throwable $error) {
+            $response = $this->delayError($error, $context);
+        }
         return $response->then(function($value) use ($self, $context) {
             return $self->outputFilter($value, $context);
         });
@@ -529,26 +568,26 @@ abstract class Service extends HandlerManager {
             $stream->close();
             return Future\error($e);
         }
+        catch (Throwable $e) {
+            $stream->close();
+            return Future\error($e);
+        }
     }
     public function defaultHandle($request, stdClass $context) {
-        $error = null;
-        set_error_handler(function($errno, $errstr, $errfile, $errline) use (&$error) {
-            $error = new ErrorException($errstr, 0, $errno, $errfile, $errline);
-        }, $this->errorTypes);
-        ob_start();
-        ob_implicit_flush(0);
-        $context->clients = $this;
-        $context->methods = $this->calls;
+        self::$trackError    = true;
+        self::$lastError     = null;
+        $context->clients    = $this;
+        $context->methods    = $this->calls;
         $beforeFilterHandler = $this->beforeFilterHandler;
-        $response = $beforeFilterHandler($request, $context);
-        $self = $this;
-        return $response->then(function($result) use ($self, &$error, $context) {
-            @ob_end_clean();
-            restore_error_handler();
-            if ($error === null) {
+        $response            = $beforeFilterHandler($request, $context);
+        $self                = $this;
+
+        return $response->then(function($result) use ($self, $context) {
+            Service::$trackError = false;
+            if (Service::$lastError === null) {
                 return $result;
             }
-            return $self->endError($error, $context);
+            return $self->endError(Service::$lastError, $context);
         });
     }
     private static function getDeclaredOnlyMethods($class) {
@@ -616,7 +655,7 @@ abstract class Service extends HandlerManager {
         if (!array_key_exists($name, $this->calls)) {
             $this->names[] = $alias;
         }
-        if (class_exists("\\Generator")) {
+        if (HaveGenerator) {
             if (is_array($func)) {
                 $f = new ReflectionMethod($func[0], $func[1]);
             }
@@ -1031,8 +1070,9 @@ abstract class Service extends HandlerManager {
             $timer = $this->timer->setTimeout(function() use ($future) {
                 $future->reject(new TimeoutException('timeout'));
             }, $timeout);
-            $request->whenComplete(function() use ($self, $timer) {
-                $self->timer->clearTimeout($timer);
+            $request->whenComplete(function() use ($self, $topic, $id) {
+                $topics = $self->getTopics($topic);
+                $self->delTimer($topics, $id);
             })->fill($future);
             return $future->catchError(function($e) use ($self, $topics, $topic, $id) {
                 if ($e instanceof TimeoutException) {
