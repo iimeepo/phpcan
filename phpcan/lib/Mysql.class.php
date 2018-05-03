@@ -154,7 +154,7 @@ class Mysql{
     }
 
     //组成SQL语句：ORDER BY `field` DESC/ASC
-    public function order($order = '')
+    public function order(string $order = '')
     {
         if ($order == '')
         {
@@ -165,7 +165,7 @@ class Mysql{
     }
 
     //组成SQL语句：GROUP BY `field`
-    public function group($group = '')
+    public function group(string $group = '')
     {
         if ($group == '')
         {
@@ -176,7 +176,7 @@ class Mysql{
     }
 
     //组成SQL语句：LIMIT 10,1
-    public function limit($limit = 1, $len = 0)
+    public function limit(int $limit = 1, int $len = 0)
     {
         $this->_limit = ' LIMIT '.$limit;
         if ($len > 0)
@@ -185,7 +185,7 @@ class Mysql{
     }
 
     //组成SQL语句：INNER JOIN `table` ON ....
-    public function join($join = '', $on = '', $model = 'INNER')
+    public function join(string $join = '', string $on = '', string $model = 'INNER')
     {
         if ($join == '' OR $on == '')
         {

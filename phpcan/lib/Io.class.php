@@ -24,7 +24,7 @@ class Io{
      * @param string $replace
      * @return string|array
      */
-    public function post($key = '', $default = FALSE, $replace = '')
+    public function post(string $key = '', bool $default = FALSE, string $replace = '')
     {
         // 如果没有设置KEY，则返回所有POST值
         if ($key == '')
@@ -63,7 +63,7 @@ class Io{
      * @param string $replace
      * @return string|array
      */
-    public function get($key = '', $default = FALSE, $replace = '')
+    public function get(string $key = '', bool $default = FALSE, string $replace = '')
     {
         // 如果没有设置KEY，则返回所有POST值
         if ($key == '')
@@ -101,7 +101,7 @@ class Io{
      * @param bool $default
      * @return array|string
      */
-    public function header($key = '', $default = FALSE)
+    public function header(string $key = '', bool $default = FALSE)
     {
         // 如果KEY为空，则返回所有
         if ($key == '')
@@ -128,7 +128,7 @@ class Io{
      * @param int $code
      * @param string $type
      */
-    public function out($content = [], $code = 200, $type = '')
+    public function out(array $content = [], int $code = 200, string $type = '')
     {
         $type = ($type == '') ? conf('RESPONSE') : $type;
         $contentType  = '';
