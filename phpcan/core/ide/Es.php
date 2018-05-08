@@ -18,8 +18,19 @@ namespace api;
 /**
  * Class Es
  * @package api
- * @method \api\Es|static aa
- * @method static bb
- * @method static cc
+ * @method static createIndex(string $name, array $field, array $settings)
+ * @method static deleteIndex(string $name)
+ * @method static getMapping(string $name)
+ * @method static putMapping(string $name, array $field)
+ * @method static|\api\Es select(string $field)
+ * @method \api\Es from(string $index)
+ * @method \api\Es where(array $where)
+ * @method \api\Es order(array $order)
+ * @method \api\Es limit(int $limit, int $len)
+ * @method get($id)
+ * @method all(array $highlight)
+ * @method add(array $data, bool $many)
+ * @method edit($id, array $data)
+ * @method delete()
  */
 class Es{}

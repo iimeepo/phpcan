@@ -311,7 +311,7 @@ function httpHeader($key = '', $default = FALSE)
 /**
  * 描述：返回MYSQL实例
  * @param string $table
- * @return mixed
+ * @return \api\Mysql
  */
 function mysql($table = '')
 {
@@ -321,7 +321,7 @@ function mysql($table = '')
 /**
  * 描述：返回MONGODB实例
  * @param string $table
- * @return mixed
+ * @return \api\Mongodb
  */
 function mongodb($table = '')
 {
@@ -332,10 +332,21 @@ function mongodb($table = '')
  * 描述：返回REDIS实例
  * @param string $key
  * @param string $action
+ * @return \api\Redis
  */
 function redis($key = '', $action = '')
 {
     return \api\Redis::key($key, $action);
+}
+
+/**
+ * 描述：返回ES实例
+ * @param string $index
+ * @return \api\Es
+ */
+function es($index = '')
+{
+    return \api\Es::from($index);
 }
 
 /**
