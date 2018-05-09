@@ -253,27 +253,44 @@ final class Http{
         $response = [];
         foreach ($this->_multi as $key => $row)
         {
+            $header = $this->_setHeader($row['header']);
             $method = (isset($row['post']) && ! empty($row['post'])) ? 'POST' : 'GET';
             $opt = [];
             $opt['opt'] = [
                 CURLOPT_URL => $this->_baseUrl($row['url'], $row['query']),
                 CURLOPT_TIMEOUT => $row['timeout'],
                 CURLOPT_FOLLOWLOCATION => FALSE,
-                CURLOPT_HTTPHEADER => $this->_setHeader($row['header']),
+                CURLOPT_HTTPHEADER => $header,
                 CURLOPT_CUSTOMREQUEST => $method
             ];
+            $post = [];
             if ($method == 'POST')
             {
                 $opt['opt'][CURLOPT_POST] = TRUE;
                 $opt['opt'][CURLOPT_POSTFIELDS] = http_build_query($row['post']);
+                $post = $row['post'];
             }
             $this->_client->add($opt,
-                function($result) use (&$response, $key){
-                    $response[$key] = $this->_response($result['body']);
-                },
-                function($result){
-                    $this->_error($result);
-                });
+            function($result) use (&$response, $key, $header, $method, $post){
+                $response[$key] = $this->_response($result['body']);
+                $log = [
+                    'URL'    => $result['info']['url'],
+                    'TIME'   => $result['info']['total_time'],
+                    'METHOD' => $method,
+                    'CODE'   => $result['info']['http_code'],
+                    'HEADER' => $header,
+                    'MULTI'  => 1
+                ];
+                if ($method == 'POST')
+                {
+                    $log['DATA'] = $post;
+                }
+                // 日志
+                \api\Log::add('HTTP', $log);
+            },
+            function($result){
+                $this->_error($result);
+            });
         }
         $this->_client->start();
         $this->_multi = [];
