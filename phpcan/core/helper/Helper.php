@@ -68,7 +68,7 @@ function json($code = 100, $msg = '执行成功', $data = [], $httpcode = 200)
     elseif (is_array($msg))
     {
         $cont['code'] = $code;
-        $cont['data'] = $data;
+        $cont['data'] = $msg;
     }
     else
     {
