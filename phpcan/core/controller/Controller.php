@@ -32,8 +32,19 @@ class Controller{
     {
         $PHP_SELF = $_SERVER['PHP_SELF'];
         preg_match('/(.+)\/index.php(.*)/', $PHP_SELF, $match);
-        //URL地址
-        $this->_url = $_SERVER['REQUEST_URI'];
+        // 判断是不是CLI模式
+        if (php_sapi_name() == 'cli')
+        {
+            global $argv;
+            if ( ! isset($argv[1]))
+                error(101, '请指定访问的服务，例如：/demo/demo/');
+            $this->_url = $argv[1];
+        }
+        else
+        {
+            // URL地址
+            $this->_url = $_SERVER['REQUEST_URI'];
+        }
         // 项目不在根目录则过滤
         if ( ! empty($match))
         {
@@ -79,7 +90,7 @@ class Controller{
             define('ENV', $env);
         }
         // 定义请求模式
-        define('_METHOD', $_SERVER['REQUEST_METHOD']);
+        define('_METHOD', ( ! isset($_SERVER['REQUEST_METHOD'])) ? 'GET' : $_SERVER['REQUEST_METHOD']);
         // 判断有没有开启路由
         if ( ! conf('ROUTER'))
         {
