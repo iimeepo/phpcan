@@ -30,12 +30,15 @@ final class Autoload{
         'api\Mysql'     => 'phpcan\facade\Mysql',
         'api\Redis'     => 'phpcan\facade\Redis',
         'api\Mcq'       => 'phpcan\facade\Mcq',
+        'api\Rmq'       => 'phpcan\facade\Rmq',
         'api\Mongodb'   => 'phpcan\facade\Mongodb',
         'api\Influxdb'  => 'phpcan\facade\Influxdb',
         'api\Zookeeper' => 'phpcan\facade\Zookeeper',
         'api\Cache'     => 'phpcan\facade\Cache',
         'api\Soa'       => 'phpcan\facade\Soa',
         'api\Kafka'     => 'phpcan\facade\Kafka',
+        'api\Es'        => 'phpcan\facade\Es',
+        'api\Upload'    => 'phpcan\facade\Upload'
     ];
 
     /**

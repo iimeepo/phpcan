@@ -153,7 +153,11 @@ class Mysql{
         return $this;
     }
 
-    //组成SQL语句：ORDER BY `field` DESC/ASC
+    /**
+     * 描述：组成SQL语句：ORDER BY `field` DESC/ASC
+     * @param string $order
+     * @return $this
+     */
     public function order(string $order = '')
     {
         if ($order == '')
@@ -164,7 +168,11 @@ class Mysql{
         return $this;
     }
 
-    //组成SQL语句：GROUP BY `field`
+    /**
+     * 描述：组成SQL语句：GROUP BY `field`
+     * @param string $group
+     * @return $this
+     */
     public function group(string $group = '')
     {
         if ($group == '')
@@ -175,7 +183,12 @@ class Mysql{
         return $this;
     }
 
-    //组成SQL语句：LIMIT 10,1
+    /**
+     * 描述：组成SQL语句：LIMIT 10,1
+     * @param int $limit
+     * @param int $len
+     * @return $this
+     */
     public function limit(int $limit = 1, int $len = 0)
     {
         $this->_limit = ' LIMIT '.$limit;
@@ -184,7 +197,13 @@ class Mysql{
         return $this;
     }
 
-    //组成SQL语句：INNER JOIN `table` ON ....
+    /**
+     * 描述：组成SQL语句：INNER JOIN `table` ON ....
+     * @param string $join
+     * @param string $on
+     * @param string $model
+     * @return $this
+     */
     public function join(string $join = '', string $on = '', string $model = 'INNER')
     {
         if ($join == '' OR $on == '')

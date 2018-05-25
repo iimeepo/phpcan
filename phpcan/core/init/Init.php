@@ -72,7 +72,8 @@ class Init{
             'Redis.php',
             'Zookeeper.php',
             'Influxdb.php',
-            'Kafka.php'
+            'Kafka.php',
+            'Es.php'
         ];
         foreach ($conf as $file)
         {
@@ -102,6 +103,9 @@ class Init{
                 case 'Kafka.php':
                     $headers = str_replace('[msg]', 'KAFKA配置文件', $header);
                 break;
+                case 'Es.php':
+                    $headers = str_replace('[msg]', 'ES配置文件', $header);
+                break;
             }
             $content  = $headers."return [\r\n";
             switch ($file)
@@ -129,7 +133,7 @@ class Init{
                     $content .= "    // 当前服务版本\r\n";
                     $content .= "    'VERSION'    => '1.0.0',\r\n";
                     $content .= "    // HTTP请求最大超时时间\r\n";
-                    $content .= "    'HTTP_TIMEOUT' => 3.0\r\n";
+                    $content .= "    'HTTP_TIMEOUT' => 3\r\n";
                 break;
                 case 'Mcq.php':
                     $content .= "    // MCQ地址\r\n";
@@ -210,6 +214,28 @@ class Init{
                     $content .= "    'HOST' => '',\r\n";
                     $content .= "    // 端口\r\n";
                     $content .= "    'PORT' => '9092'\r\n";
+                break;
+                case 'Es.php':
+                    $content .= "    // 节点配置\r\n";
+                    $content .= "    'HOSTS' => [\r\n";
+                    $content .= "       // 可配置多个节点\r\n";
+                    $content .= "       [\r\n";
+                    $content .= "           // 地址\r\n";
+                    $content .= "           'HOST'     => '',\r\n";
+                    $content .= "           // 账号\r\n";
+                    $content .= "           'USERNAME' => '',\r\n";
+                    $content .= "           // 密码\r\n";
+                    $content .= "           'PASSWORD' => '',\r\n";
+                    $content .= "           // 端口\r\n";
+                    $content .= "           'PORT'     => 9200\r\n";
+                    $content .= "       ]\r\n";
+                    $content .= "    ],\r\n";
+                    $content .= "    // 重试次数，0为不重试\r\n";
+                    $content .= "    'RETRY' => 2,\r\n";
+                    $content .= "    // 连接节点超时时间\r\n";
+                    $content .= "    'CONNECT_TIMEOUT' => 1,\r\n";
+                    $content .= "    // 执行请求超时时间\r\n";
+                    $content .= "    'TIMEOUT' => 1\r\n";
                 break;
             }
             $content .= "\r\n];";

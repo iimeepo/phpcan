@@ -14,7 +14,6 @@
  */
 
 namespace phpcan;
-
 use ReflectionClass;
 use phpcan\Controller as Controller;
 

@@ -16,12 +16,10 @@
 namespace api;
 
 /**
- * Class Http
+ * Class Upload
  * @package api
- * @method static get(string $url, array $params)
- * @method static post(string $url, array $data, array $params)
- * @method static stream(string $url, string $data, array $params)
- * @method static|\api\Http add(string $key, array $params)
- * @method static run()
+ * @method static local(string $base64, string $path)
+ * @method static water(string $waterImg, $img, int $position)
+ * @method static ftp(array $conf, $img, $localImg)
  */
-class Http{}
+class Upload{}
