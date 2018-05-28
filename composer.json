@@ -4,8 +4,9 @@
         "hprose/hprose": ">=2.0.0",
         "mongodb/mongodb": ">=1.3.0",
         "nmred/kafka-php": "0.2.*",
-	"elasticsearch/elasticsearch": "~6.0",
-        "phpcan/client": "1.0.2"
+        "elasticsearch/elasticsearch": "~6.0",
+        "phpcan/client": "1.0.2",
+        "php-amqplib/php-amqplib": ">=2.7.2"
     },
     "config" : {
         "vendor-dir" : "phpcan/vendor"

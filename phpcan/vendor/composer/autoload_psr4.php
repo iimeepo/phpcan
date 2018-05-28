@@ -8,6 +8,7 @@ $baseDir = dirname(dirname($vendorDir));
 return array(
     'React\\Promise\\' => array($vendorDir . '/react/promise/src'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
+    'PhpAmqpLib\\' => array($vendorDir . '/php-amqplib/php-amqplib/PhpAmqpLib'),
     'MongoDB\\' => array($vendorDir . '/mongodb/mongodb/src'),
     'Hprose\\' => array($vendorDir . '/hprose/hprose/src/Hprose'),
     'GuzzleHttp\\Stream\\' => array($vendorDir . '/guzzlehttp/streams/src'),

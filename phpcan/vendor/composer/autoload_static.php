@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitf4627e05fee68be7596a4e002cfa48c7
+class ComposerStaticInitce3d70021936c672f42c1cf74e8ed6ca
 {
     public static $files = array (
         'ad155f8f1cf0d418fe49e248db8c661b' => __DIR__ . '/..' . '/react/promise/src/functions_include.php',
@@ -21,6 +21,7 @@ class ComposerStaticInitf4627e05fee68be7596a4e002cfa48c7
         'P' => 
         array (
             'Psr\\Log\\' => 8,
+            'PhpAmqpLib\\' => 11,
         ),
         'M' => 
         array (
@@ -54,6 +55,10 @@ class ComposerStaticInitf4627e05fee68be7596a4e002cfa48c7
         'Psr\\Log\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
+        ),
+        'PhpAmqpLib\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/php-amqplib/php-amqplib/PhpAmqpLib',
         ),
         'MongoDB\\' => 
         array (
@@ -105,9 +110,9 @@ class ComposerStaticInitf4627e05fee68be7596a4e002cfa48c7
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitf4627e05fee68be7596a4e002cfa48c7::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitf4627e05fee68be7596a4e002cfa48c7::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitf4627e05fee68be7596a4e002cfa48c7::$prefixesPsr0;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitce3d70021936c672f42c1cf74e8ed6ca::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitce3d70021936c672f42c1cf74e8ed6ca::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitce3d70021936c672f42c1cf74e8ed6ca::$prefixesPsr0;
 
         }, null, ClassLoader::class);
     }
