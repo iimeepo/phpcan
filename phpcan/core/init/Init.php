@@ -229,11 +229,11 @@ class Init{
                     $content .= "    // 端口\r\n";
                     $content .= "    'PORT'     => 5672,\r\n";
                     $content .= "    // 虚拟主机\r\n";
-                    $content .= "    'VHOST'    => '/'\r\n";
+                    $content .= "    'VHOST'    => '/',\r\n";
                     $content .= "    // 默认交换机\r\n";
-                    $content .= "    'EXCHANGE' => ''\r\n";
+                    $content .= "    'EXCHANGE' => '',\r\n";
                     $content .= "    // 默认队列\r\n";
-                    $content .= "    'QUEYE'    => ''\r\n";
+                    $content .= "    'QUEYE'    => '',\r\n";
                     $content .= "    // 默认队列可接收的任务数，最大不能超过65535，一般默认即可\r\n";
                     $content .= "    'QOS'      => 0\r\n";
                     break;
