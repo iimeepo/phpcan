@@ -73,7 +73,8 @@ class Init{
             'Zookeeper.php',
             'Influxdb.php',
             'Kafka.php',
-            'Es.php'
+            'Es.php',
+            'Rmq.php'
         ];
         foreach ($conf as $file)
         {
@@ -105,6 +106,9 @@ class Init{
                 break;
                 case 'Es.php':
                     $headers = str_replace('[msg]', 'ES配置文件', $header);
+                break;
+                case 'Rmq.php':
+                    $headers = str_replace('[msg]', 'RABBITMQ配置文件', $header);
                 break;
             }
             $content  = $headers."return [\r\n";
@@ -139,7 +143,7 @@ class Init{
                     $content .= "    // MCQ地址\r\n";
                     $content .= "    'HOST'    => '',\r\n";
                     $content .= "    // MCQ端口\r\n";
-                    $content .= "    'PORT'    => '11212',\r\n";
+                    $content .= "    'PORT'    => 11212,\r\n";
                     $content .= "    // KEY统一前缀，没有可为空\r\n";
                     $content .= "    'PREFIX'  => '',\r\n";
                     $content .= "    // 连接超时时间\r\n";
@@ -153,7 +157,7 @@ class Init{
                     $content .= "    // MONGODB密码\r\n";
                     $content .= "    'PASSWORD' => '',\r\n";
                     $content .= "    // 端口号\r\n";
-                    $content .= "    'PORT'     => '27017',\r\n";
+                    $content .= "    'PORT'     => 27017,\r\n";
                     $content .= "    // 数据库名称\r\n";
                     $content .= "    'DATABASE' => '',\r\n";
                     $content .= "    // 数据表前缀，没有可为空\r\n";
@@ -167,7 +171,7 @@ class Init{
                     $content .= "    // 数据库密码\r\n";
                     $content .= "    'PASSWORD' => '',\r\n";
                     $content .= "    // 数据库端口\r\n";
-                    $content .= "    'PORT'     => '3306',\r\n";
+                    $content .= "    'PORT'     => 3306,\r\n";
                     $content .= "    // 字符集\r\n";
                     $content .= "    'CHARSET'  => 'utf-8',\r\n";
                     $content .= "    // 数据库名称\r\n";
@@ -181,7 +185,7 @@ class Init{
                     $content .= "    // REDIS密码，如果没有可为空\r\n";
                     $content .= "    'PASSWORD' => '',\r\n";
                     $content .= "    // REDIS端口\r\n";
-                    $content .= "    'PORT'     => '6379',\r\n";
+                    $content .= "    'PORT'     => 6379,\r\n";
                     $content .= "    // 连接超时时间\r\n";
                     $content .= "    'TIMEOUT'  => 3,\r\n";
                     $content .= "    // 库序号，0-15，默认0\r\n";
@@ -193,7 +197,7 @@ class Init{
                     $content .= "    // 地址\r\n";
                     $content .= "    'HOST'    => '',\r\n";
                     $content .= "    // 端口\r\n";
-                    $content .= "    'PORT'    => '2181',\r\n";
+                    $content .= "    'PORT'    => 2181,\r\n";
                     $content .= "    // 连接超时时间\r\n";
                     $content .= "    'TIMEOUT' => 3\r\n";
                 break;
@@ -205,7 +209,7 @@ class Init{
                     $content .= "    // 数据库密码\r\n";
                     $content .= "    'PASSWORD' => '',\r\n";
                     $content .= "    // 数据库端口\r\n";
-                    $content .= "    'PORT'     => '8086',\r\n";
+                    $content .= "    'PORT'     => 8086,\r\n";
                     $content .= "    // 数据库名称\r\n";
                     $content .= "    'DATABASE' => ''\r\n";
                 break;
@@ -213,8 +217,26 @@ class Init{
                     $content .= "    // 地址\r\n";
                     $content .= "    'HOST' => '',\r\n";
                     $content .= "    // 端口\r\n";
-                    $content .= "    'PORT' => '9092'\r\n";
+                    $content .= "    'PORT' => 9092\r\n";
                 break;
+                case 'Rmq.php':
+                    $content .= "    // 队列地址\r\n";
+                    $content .= "    'HOST'     => '',\r\n";
+                    $content .= "    // 账号\r\n";
+                    $content .= "    'USERNAME' => '',\r\n";
+                    $content .= "    // 密码\r\n";
+                    $content .= "    'PASSWORD' => '',\r\n";
+                    $content .= "    // 端口\r\n";
+                    $content .= "    'PORT'     => 5672,\r\n";
+                    $content .= "    // 虚拟主机\r\n";
+                    $content .= "    'VHOST'    => '/'\r\n";
+                    $content .= "    // 默认交换机\r\n";
+                    $content .= "    'EXCHANGE' => ''\r\n";
+                    $content .= "    // 默认队列\r\n";
+                    $content .= "    'QUEYE'    => ''\r\n";
+                    $content .= "    // 默认队列可接收的任务数，最大不能超过65535，一般默认即可\r\n";
+                    $content .= "    'QOS'      => 0\r\n";
+                    break;
                 case 'Es.php':
                     $content .= "    // 节点配置\r\n";
                     $content .= "    'HOSTS' => [\r\n";
