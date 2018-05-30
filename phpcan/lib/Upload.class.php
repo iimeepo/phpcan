@@ -94,6 +94,11 @@ class Upload{
         $width   = $imgInfo[0];
         // 水印图片高度
         $height  = $imgInfo[1];
+        // 如果图片尺寸小于水印图片则不加水印
+        if ($this->_imgWitdh < $width || $this->_imgHeight < $height)
+        {
+            return $this;
+        }
         switch ($imgInfo[2])
         {
             case 1:
