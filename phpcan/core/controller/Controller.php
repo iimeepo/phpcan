@@ -62,7 +62,7 @@ class Controller{
         // 解析应用目录
         $this->_urlArr = explode('/', trim($this->_url, '/'));
         // 定义项目目录
-        define('_APP', !in_array($this->_urlArr[0], conf('ALLOW')) ? conf('DEFAULT') : $this->_urlArr[0]);
+        define('_APP', ! in_array($this->_urlArr[0], conf('ALLOW')) ? conf('DEFAULT') : $this->_urlArr[0]);
         // 加载项目内配置文件，覆盖通用配置文件内容
         $appConfFile = _WORKPATH.'/'._APP.'/conf/Conf.php';
         if ( ! is_file($appConfFile))
@@ -110,29 +110,31 @@ class Controller{
     }
 
     /**
-     * 描述：根据路径解析控制器
+     * 描述：默认模式，根据路径解析控制器
      */
     private function _pathinfo()
     {
-        $action = array_pop($this->_urlArr);
-        if (count($this->_urlArr) == 2)
+        $count = count($this->_urlArr);
+        // 如果只有2级说明控制器直接放在spi目录下，无需处理
+        if ($count == 2)
         {
             $spi = ucfirst(array_pop($this->_urlArr));
         }
         else
         {
             $spi = $doc = '';
-            $count = count($this->_urlArr);
-            foreach ($this->_urlArr as $k => $url)
+            foreach ($this->_urlArr as $k => $v)
             {
                 if ($k == 0) continue;
                 $spi .= $doc;
-                $spi .= ($k + 1 == $count) ? ucfirst($url) : $url;
+                $spi .= ($k + 1 == $count) ? ucfirst($v) : $v;
                 $doc  = '\\';
             }
         }
+        // 组合完整命名空间
         $namespace = 'spi\\' . $spi;
         // 执行控制器
+        $action = array_pop($this->_urlArr);
         $this->_do($namespace, $action);
     }
 
@@ -144,6 +146,8 @@ class Controller{
      */
     private function _do(string $namespace, string $action)
     {
+        // 处理REST自动路由
+        $action = $this->_restRouter($action);
         // 检测默认中间件
         $middleware = conf('MIDDLEWARE');
         if ( ! empty($middleware))
@@ -217,6 +221,25 @@ class Controller{
                     Middleware::$v($data[2][$k]);
             }
         }
+    }
+
+    /**
+     * 描述：处理REST路由
+     * @param string $action
+     */
+    private function _restRouter(string $action)
+    {
+        if ( ! conf('REST_ROUTER') || _METHOD == 'GET')
+        {
+            return $action;
+        }
+        // 检测别名
+        $alias = conf('REST_ALIAS');
+        if ( ! is_array($alias) || ! isset($alias[_METHOD]))
+        {
+            return $action.ucfirst(strtolower(_METHOD));
+        }
+        return $action.$alias[_METHOD];
     }
 
 }

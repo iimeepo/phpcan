@@ -122,7 +122,15 @@ class Init{
                     $content .= "    // 输入过滤\r\n";
                     $content .= "    'INPUTFILTER' => 'escape|xss',\r\n";
                     $content .= "    // 开启路由\r\n";
-                    $content .= "    'ROUTER'      => TRUE,\r\n";
+                    $content .= "    'ROUTER'      => FALSE,\r\n";
+                    $content .= "    // 是否启用REST自动路由，启用后针对POST、PUT、DELETE可以实现自动路由，无需配置路由规则\r\n";
+                    $content .= "    'REST_ROUTER' => TRUE,\r\n";
+                    $content .= "    // REST类型路由操作别名\r\n";
+                    $content .= "    'REST_ALIAS'  => [\r\n";
+                    $content .= "       'POST'   => 'Add',\r\n";
+                    $content .= "       'PUT'    => 'Edit',\r\n";
+                    $content .= "       'DELETE' => 'Delete'\r\n";
+                    $content .= "    ],\r\n";
                     $content .= "    // 默认中间件\r\n";
                     $content .= "    'MIDDLEWARE' => [\r\n";
                     $content .= "        'BEFORE' => [],\r\n";
@@ -137,7 +145,7 @@ class Init{
                     $content .= "    // 当前服务版本\r\n";
                     $content .= "    'VERSION'    => '1.0.0',\r\n";
                     $content .= "    // HTTP请求最大超时时间\r\n";
-                    $content .= "    'HTTP_TIMEOUT' => 3\r\n";
+                    $content .= "    'HTTP_TIMEOUT' => 3";
                 break;
                 case 'Mcq.php':
                     $content .= "    // MCQ地址\r\n";
@@ -147,7 +155,7 @@ class Init{
                     $content .= "    // KEY统一前缀，没有可为空\r\n";
                     $content .= "    'PREFIX'  => '',\r\n";
                     $content .= "    // 连接超时时间\r\n";
-                    $content .= "    'TIMEOUT' => 1\r\n";
+                    $content .= "    'TIMEOUT' => 1";
                 break;
                 case 'Mongodb.php':
                     $content .= "    // MONGODB地址\r\n";
@@ -161,7 +169,7 @@ class Init{
                     $content .= "    // 数据库名称\r\n";
                     $content .= "    'DATABASE' => '',\r\n";
                     $content .= "    // 数据表前缀，没有可为空\r\n";
-                    $content .= "    'PREFIX'   => ''\r\n";
+                    $content .= "    'PREFIX'   => ''";
                 break;
                 case 'Mysql.php':
                     $content .= "    // 数据库地址\r\n";
@@ -177,7 +185,7 @@ class Init{
                     $content .= "    // 数据库名称\r\n";
                     $content .= "    'DATABASE' => '',\r\n";
                     $content .= "    // 数据表前缀，没有可为空\r\n";
-                    $content .= "    'PREFIX'   => ''\r\n";
+                    $content .= "    'PREFIX'   => ''";
                 break;
                 case 'Redis.php':
                     $content .= "    // REDIS地址\r\n";
@@ -191,7 +199,7 @@ class Init{
                     $content .= "    // 库序号，0-15，默认0\r\n";
                     $content .= "    'DATABASE' => 0,\r\n";
                     $content .= "    // KEY统一前缀，没有可为空\r\n";
-                    $content .= "    'PREFIX'   => ''\r\n";
+                    $content .= "    'PREFIX'   => ''";
                 break;
                 case 'Zookeeper.php':
                     $content .= "    // 地址\r\n";
@@ -199,7 +207,7 @@ class Init{
                     $content .= "    // 端口\r\n";
                     $content .= "    'PORT'    => 2181,\r\n";
                     $content .= "    // 连接超时时间\r\n";
-                    $content .= "    'TIMEOUT' => 3\r\n";
+                    $content .= "    'TIMEOUT' => 3";
                 break;
                 case 'Influxdb.php':
                     $content .= "    // 数据库地址\r\n";
@@ -211,13 +219,13 @@ class Init{
                     $content .= "    // 数据库端口\r\n";
                     $content .= "    'PORT'     => 8086,\r\n";
                     $content .= "    // 数据库名称\r\n";
-                    $content .= "    'DATABASE' => ''\r\n";
+                    $content .= "    'DATABASE' => ''";
                 break;
                 case 'Kafka.php':
                     $content .= "    // 地址\r\n";
                     $content .= "    'HOST' => '',\r\n";
                     $content .= "    // 端口\r\n";
-                    $content .= "    'PORT' => 9092\r\n";
+                    $content .= "    'PORT' => 9092";
                 break;
                 case 'Rmq.php':
                     $content .= "    // 队列地址\r\n";
@@ -235,7 +243,7 @@ class Init{
                     $content .= "    // 默认队列\r\n";
                     $content .= "    'QUEYE'    => '',\r\n";
                     $content .= "    // 默认队列可接收的任务数，最大不能超过65535，一般默认即可\r\n";
-                    $content .= "    'QOS'      => 0\r\n";
+                    $content .= "    'QOS'      => 0";
                     break;
                 case 'Es.php':
                     $content .= "    // 节点配置\r\n";
@@ -257,7 +265,7 @@ class Init{
                     $content .= "    // 连接节点超时时间\r\n";
                     $content .= "    'CONNECT_TIMEOUT' => 1,\r\n";
                     $content .= "    // 执行请求超时时间\r\n";
-                    $content .= "    'TIMEOUT' => 1\r\n";
+                    $content .= "    'TIMEOUT' => 1";
                 break;
             }
             $content .= "\r\n];";
