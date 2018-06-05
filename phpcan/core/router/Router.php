@@ -96,7 +96,7 @@ class Router{
             // 进行分组匹配
             foreach (self::$_map as $preg => $row)
             {
-                if (preg_match('#/?'.$preg.'/#i', $url, $data))
+                if (preg_match('#/?'.$preg.'/?#i', $url, $data))
                 {
                     if ( ! isset($data[1]))
                         error(1009);
