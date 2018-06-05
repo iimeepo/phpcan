@@ -114,7 +114,9 @@ class Controller{
      */
     private function _pathinfo()
     {
-        $count = count($this->_urlArr);
+        // 执行控制器
+        $action = array_pop($this->_urlArr);
+        $count  = count($this->_urlArr);
         // 如果只有2级说明控制器直接放在spi目录下，无需处理
         if ($count == 2)
         {
@@ -133,8 +135,6 @@ class Controller{
         }
         // 组合完整命名空间
         $namespace = 'spi\\' . $spi;
-        // 执行控制器
-        $action = array_pop($this->_urlArr);
         $this->_do($namespace, $action);
     }
 
