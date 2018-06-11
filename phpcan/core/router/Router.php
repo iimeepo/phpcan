@@ -102,9 +102,9 @@ class Router{
                         error(1009);
                     $result = $row;
                     // 修正action参数
-                    $action = $data[1];
+					$action = rtrim($data[1], '/');
                     if (strpos($action, '/') != FALSE)
-                        $action = substr($data[1], (strripos($data[1], '/') + 1), strlen($data[1]));
+                        $action = substr($action, (strripos($action, '/') + 1), strlen($action));
                     break;
                 }
             }
