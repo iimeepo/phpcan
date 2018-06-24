@@ -46,6 +46,7 @@ class Conf{
             if (is_file($file))
             {
                 $conf = require $file;
+                if (is_array($conf))
                 $this->merge($conf);
             }
             // 如果SOA配置中存在KEY值则返回
