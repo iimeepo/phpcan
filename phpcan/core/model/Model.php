@@ -121,7 +121,21 @@ class Model extends Mysql
         }
         // 查询字段
         $field = (isset($param['field'])) ? $param['field'] : '';
-        $order = (isset($param['order'])) ? $param['order'] : $this->pk.' DESC';
+        if (isInt($cond))
+        {
+            $order = '';
+        }
+        else
+        {
+            if (isset($param['order']))
+            {
+                $order = ($param['order'] == null) ? '' : $param['order'];
+            }
+            else
+            {
+                $order = $this->pk.' DESC';
+            }
+        }
         $limit = (isset($param['limit'])) ? $param['limit'] : FALSE;
         $data  = $this->select($field)
                       ->from($this->table)
@@ -136,11 +150,14 @@ class Model extends Mysql
 
     /**
      * 描述：查询符合条件的第一条
-     * @param $cond
+     * @param null $cond
+     * @param string $field
+     * @return mixed
      */
-    public function first($cond = null)
+    public function first($cond = null, string $field = '')
     {
         return $this->find($cond, [
+            'field' => $field,
             'order' => $this->pk.' ASC',
             'limit' => 1
         ]);
@@ -148,12 +165,30 @@ class Model extends Mysql
 
     /**
      * 描述：查询符合条件的最后一条
-     * @param $cond
+     * @param null $cond
+     * @param string $field
+     * @return mixed
      */
-    public function last($cond = null)
+    public function last($cond = null, string $field = '')
     {
         return $this->find($cond, [
+            'field' => $field,
             'order' => $this->pk.' DESC',
+            'limit' => 1
+        ]);
+    }
+
+    /**
+     * 描述：查询一条数据
+     * @param null $cond
+     * @param string $field
+     * @return mixed
+     */
+    public function one($cond = null, string $field = '')
+    {
+        return $this->find($cond, [
+            'field' => $field,
+            'order' => null,
             'limit' => 1
         ]);
     }
