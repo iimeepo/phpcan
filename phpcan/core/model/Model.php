@@ -121,6 +121,7 @@ class Model extends Mysql
         }
         // 查询字段
         $field = (isset($param['field'])) ? $param['field'] : '';
+        $limit = (isset($param['limit'])) ? $param['limit'] : FALSE;
         if (isInt($cond))
         {
             $order = '';
@@ -129,18 +130,17 @@ class Model extends Mysql
         {
             if (isset($param['order']))
             {
-                $order = ($param['order'] == null) ? '' : $param['order'];
+                $order = $param['order'];
             }
             else
             {
-                $order = $this->pk.' DESC';
+                $order = ($limit === 1) ? '' : $this->pk.' DESC';
             }
         }
-        $limit = (isset($param['limit'])) ? $param['limit'] : FALSE;
-        $data  = $this->select($field)
-                      ->from($this->table)
-                      ->where($cond)
-                      ->order($order);
+        $data = $this->select($field)
+                     ->from($this->table)
+                     ->where($cond)
+                     ->order($order);
         if ($limit !== FALSE)
         {
             $data->limit($limit);
@@ -174,21 +174,6 @@ class Model extends Mysql
         return $this->find($cond, [
             'field' => $field,
             'order' => $this->pk.' DESC',
-            'limit' => 1
-        ]);
-    }
-
-    /**
-     * 描述：查询一条数据
-     * @param null $cond
-     * @param string $field
-     * @return mixed
-     */
-    public function one($cond = null, string $field = '')
-    {
-        return $this->find($cond, [
-            'field' => $field,
-            'order' => null,
             'limit' => 1
         ]);
     }
