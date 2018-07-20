@@ -37,6 +37,16 @@ class Redis{
     }
 
     /**
+     * 描述：选择数据库
+     * @param int $num
+     */
+    public function db(int $num = 0)
+    {
+        $this->_conn->select($num);
+        return $this;
+    }
+
+    /**
      * 描述：设置KEY
      * @param $key
      * @param string $action
@@ -93,7 +103,7 @@ class Redis{
         if ($this->_action == '') $this->_action = 'set';
         // 根据类型获取写入值
         if (in_array($this->_action, [
-            'zadd', 'hincrby', 'lset', 'zadd', 'hset'
+            'zadd', 'hincrby', 'lset', 'zadd', 'hset', 'setex'
         ]))
         {
             $data = $params[1];
