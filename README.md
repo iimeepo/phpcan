@@ -1,23 +1,3 @@
-# PHPCAN
-PHPCAN微服务开发框架服务端 - docker版本
+由于上传、访问速度问题，现PHPCAN已经迁移至码云，GITHUB上的代码将不再提交
 
-#### PHPCAN是什么
-
-PHPCAN针对微服务开发，专为接口开发而生，包含服务端，客户端，和SOA管理平台三个部分，提供高速、高效的服务开发方案
-
-#### 当前版本 V1.0.2
-更新时间：2018/05/25
-
-更新日志：
-增加Upload、Rmq
-优化细节
-
-更新时间：2018/04/12
-
-更新日志：
-优化若干BUG，增加MODEL
-
-官方QQ群：661050438 (未满)
-
-#### 官网地址
-http://www.phpcan.cn
+码云地址：https://gitee.com/suruibuas/phpcan
